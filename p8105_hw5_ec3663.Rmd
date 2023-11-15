@@ -104,7 +104,20 @@ sim_results = expand_grid(
   unnest(estimate)
 ```
 
+Plot showing proportion of times null was rejected and true value of mu
 
+```{r}
+sim_results |>
+  group_by(mu_df) |> 
+  summarise(
+    reject = sum(pval < 0.05),
+    proport = reject/5000) |> 
+  ggplot(aes(x = mu_df, y = proport)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "True value of μ", y = "Power", title = "Power of the test and the true value of μ")
+```
 
+The plot depicts a curve of test power that increases between the true values of mu of 0 to around 4 until it plateaus. The plot indicates that as the effect size increases, the power of the test also increases.
 
 
