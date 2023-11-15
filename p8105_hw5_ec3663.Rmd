@@ -115,9 +115,34 @@ sim_results |>
   ggplot(aes(x = mu_df, y = proport)) +
   geom_point() +
   geom_line() +
-  labs(x = "True value of μ", y = "Power", title = "Power of the test and the true value of μ")
+  labs(x = "True value of μ", y = "Power", title = "Power of the test versus the true value of μ")
 ```
 
 The plot depicts a curve of test power that increases between the true values of mu of 0 to around 4 until it plateaus. The plot indicates that as the effect size increases, the power of the test also increases.
 
+Plot showing average estimate of mu_hat and true value of mu
 
+```{r}
+sim_results |> 
+  group_by(mu_df) |> 
+  mutate(mu_hat_avg = mean(mu_hat)) |> 
+  ggplot(aes(x = mu_df, y = mu_hat_avg)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "True value of μ", y = "Average estimate of μ_hat", title = "Average estimate of μ_hat versus the true value of μ")
+```
+
+Plot showing average estimate of mu_hat for samples in which null was rejected and true value of mu
+
+```{r}
+sim_results |> 
+  group_by(mu_df) |> 
+  filter(pval<0.05) |> 
+  mutate(mu_hat_avg = mean(mu_hat)) |> 
+  ggplot(aes(x = mu_df, y = mu_hat_avg)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "True value of μ", y = "Average estimate of μ_hat", title = "Average estimate of μ_hat when null was rejected versus the true value of μ")
+```
+
+The sample average of mu_hat across tests for which the null is rejected is not approximately equal to the true value of mu. In the plot with the average mu_hat values when the null is rejected, we observe that the sample average of mu_hat is equal to the true value of mu for values 0, 4, 5, and 6. When the true value of mu is 1, 2, and 3, the average estimate of mu_hat is not equal to the true value. The average estimate of mu_hat may be unequal to the true value of mu, because a smaller effect size indicates a lower test power. This may influence the accuracy of the average estimate of mu_hat.
